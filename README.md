@@ -36,4 +36,5 @@ python lexasm.py assembles a lexicon of words with syntactic categories correspo
 (Prerequisites: Python 3.9)
 To try out this project locally (after installing the files from this repository and going to this directory), execute:
 python3.9 rvg.py
+
 Glenn D. Blank, 10/12/2021
