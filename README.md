@@ -32,4 +32,8 @@ python rvg parses sentences from sentin.txt, production syntactic traces like th
 python gramasm.py assembles a grammar, a collection of production rules with ternary vector conditions and changes. In versjon 0.1, the grammar is in wh.syn.
 python lexasm.py assembles a lexicon of words with syntactic categories corresponding to productions in the grammar. In vesion 01, the lexicon is wh.lex
 
+### Running
+(Prerequisites: Python 3.9)
+To try out this project locally (after installing the files from this repository and going to this directory), execute:
+python3.9 rvg.py
 Glenn D. Blank, 10/12/2021
