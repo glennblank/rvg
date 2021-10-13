@@ -1,0 +1,5 @@
+% Sentences for wh.syn and wh.lex
+Pam loves quiche.
+Who loves quiche?
+Who does George love?
+Who does George love Martha?
