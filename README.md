@@ -33,6 +33,8 @@ python gramasm.py assembles a grammar, a collection of production rules with ter
 python lexasm.py assembles a lexicon of words with syntactic categories corresponding to productions in the grammar. In vesion 01, the lexicon is wh.lex
 
 ### Dependencies
+rvg.py reads gramasm.pkl and lexicon.pkl, which gramasm.py and lexasm.py assemble from source code in wh.syn and wh.lex, respectively. Grammars and lexicons can be edited in a text editor and reassembled, though for version 0.1, wh.syn and wh.lex are hard-wired into grqmaasm.y and lexasm.py.
+
 gramasm.py and lexasm.py use PLY, a Python implmeentation of YACC as a tokenizer of RVG grammars and lexicons. See https://github.com/dabeaz/ply
 
 ### Running
