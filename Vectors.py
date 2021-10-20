@@ -1,43 +1,3 @@
-# This is a sample Python script.
-
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
-
-agreeseg = 0
-nonagreeseg = 64
-
-class PropVec:
-    """ BitVec have two two segments of binary properties: non-agreement bits then agreement bits
-        agreeseg indexes the start of the agreement segment in property vectors
-        agreeseg is assigned after reading in the grammar, computed by gramasm
-    """
-
-    def __init__(self):
-        self.properties = 0    #Representing a bit vector using Pythons bitwise operators
-
-    def clear(self):
-        self.properties = 0
-
-    def props(self):
-        print(self.properties)
-        return self.properties
-
-    def setBit(self, atPos, value):
-        """ Set property bit at atPos to on or off """
-        if atPos > nonagreeseg:
-            print(atPos + "out of range")
-            return False
-
-        bit_mask = 1
-        bit_mask <<= atPos      #Set bit atPos on in bit_mask
-        print("bit_mask:")
-        print(bit_mask)
-        if value == '+':
-            self.properties |= bit_mask     #Turn bit at atPos on
-        else:
-            self.properties &= bit_mask     #Turn bit at atPos off
-        return True
-
 class TernVec:
     """Purpose: ternary vector operators are the "machine" code of RVG.
        Logically, ternary vectors are ordered sequences of features,
@@ -112,6 +72,43 @@ class TernVec:
             bit_mask <<= 1   #Left shift to next bit in vectors
         print('\n')
         return self
+
+#PropVec is for future versions of RVG, not used at this time
+agreeseg = 0
+nonagreeseg = 64
+
+class PropVec:
+    """ BitVec have two two segments of binary properties: non-agreement bits then agreement bits
+        agreeseg indexes the start of the agreement segment in property vectors
+        agreeseg is assigned after reading in the grammar, computed by gramasm
+    """
+
+    def __init__(self):
+        self.properties = 0    #Representing a bit vector using Pythons bitwise operators
+
+    def clear(self):
+        self.properties = 0
+
+    def props(self):
+        print(self.properties)
+        return self.properties
+
+    def setBit(self, atPos, value):
+        """ Set property bit at atPos to on or off """
+        if atPos > nonagreeseg:
+            print(atPos + "out of range")
+            return False
+
+        bit_mask = 1
+        bit_mask <<= atPos      #Set bit atPos on in bit_mask
+        print("bit_mask:")
+        print(bit_mask)
+        if value == '+':
+            self.properties |= bit_mask     #Turn bit at atPos on
+        else:
+            self.properties &= bit_mask     #Turn bit at atPos off
+        return True
+
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
