@@ -8,7 +8,8 @@ At its core, RVG is a finite state machine in which states are Vectors of ternar
 The third value (?) can match either + or - values and will not change either + or 1. 
 Thus ternary value vectors can propagate constraints through a state Register Vector.
 
-Version 0.1 illustrates with a simple example. Subsequent versions will add other aspects of RVG described in the aforementioned papers.
+Version 0.1 illustrates
+with a simple example, involving WH-questions.
 
 For example:
 Who does Marcha love?
@@ -32,6 +33,11 @@ python rvg parses sentences from sentin.txt, production syntactic traces like th
 python gramasm.py assembles a grammar, a collection of production rules with ternary vector conditions and changes. In versjon 0.1, the grammar is in wh.syn.
 python lexasm.py assembles a lexicon of words with syntactic categories corresponding to productions in the grammar. In vesion 01, the lexicon is wh.lex
 
+Version 0.2 demonstrates how RVG processes embedding similarly to the human sentence proecssor. Right-embedding can iterate indefinietly in the same space, i.e., 
+Martha owns a stick that beat the dog that beat the cat that ate the kid.
+Center-embedding is sharply limited in human sentence processing and can thus requires only storing state in one or two registrs, rather than an unbounded stack:
+The robot that the man who loves Martha owns broke. 
+That's about as much center-embedding of relative clauses as we're likely to generate or understand easily (i.e, in linear time
 ### Dependencies
 rvg.py reads gramasm.pkl and lexicon.pkl, which gramasm.py and lexasm.py assemble from source code in wh.syn and wh.lex, respectively. Grammars and lexicons can be edited in a text editor and reassembled, though for version 0.1, wh.syn and wh.lex are hard-wired into gramasm.py and lexasm.py, respectively.
 
@@ -40,12 +46,13 @@ gramasm.py and lexasm.py use PLY, a Python implmeentation of YACC as a tokenizer
 ### Running
 (Prerequisites: Python 3.9)
 To try out this project locally (after installing the files from this repository and going to this directory), execute:
-python3.9 rvg.py
+python3 rvg.py
+RVG will prompt for the name of a sentence file, for version 0.2, enter either wh or rel (for sentin.wh of version 0.1 or sentin.rel of version 0.2).
 
-To recompile the grammar wh.syn (see note about PLY above):
+To reassemble the grammar wh.syn (see note about PLY above):
 python3.9 gramasm.py
 
-To recomplie the lexicon why.lex (see note about PLY above):
+To reassemble the lexicon why.lex (see note about PLY above):
 python3.9 lexasm.py
 
-Glenn D. Blank, 10/12/2021
+Glenn D. Blank, 10/12/2021 (0.1), 10/27/2021 (0.2)
