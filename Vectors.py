@@ -20,6 +20,12 @@ class TernVec:
         self.HI = 0    #Set to "?"
         self.LO = 0    #Set to "?"
 
+    def isClear(self):
+        if self.HI == 0 and self.LO == 0:
+            return True
+        else:
+            return False
+
     def setFeature(self, atPos, ternValue):
         """ Given an int atPos and a ternValue "+", "-", or "?", encode a feature in self TernVec """
         bit_mask = 1

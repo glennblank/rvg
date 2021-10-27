@@ -8,16 +8,17 @@ f = open('grammar.pkl', 'rb')
 grammar = pickle.load(f)
 featureLabels, productions, initFinal = grammar[0], grammar[1], grammar[2]
 
-initStateVec = Vectors.TernVec()    #For now, state is just a StateVec
+SynStateVec = Vectors.TernVec()     #Current state register is a Ternary Vector 
+initStateVec = Vectors.TernVec()    #Inital state vector for each sentence
 initStateVec.change3(productions[initFinal][2]) #init state is changeVec of initFinal production
+SynStateVec.change3(initStateVec)   #Initialize current state register with initFinal produciton
+
+# sentStore Syntatcc State vector in registers when center-embedding relative clauses
+RelRegister0 = Vectors.TernVec()
+RelRegister1 = Vectors.TernVec()
 
 f = open('lexicon.pkl', 'rb')   #Open the last assembled lexicon
 lexicon = pickle.load(f)    # list of lexical entires to be constructed
-
-#Open sentence file
-#   file_name = input('Enter .syn file name:')
-sentence_file_name = "sentin.txt"
-sentence_file = open(sentence_file_name, "r")
 
 def get_sentence(sentence_file):
     "Read a line from sentence_file and return it as a list of tokens."
@@ -25,9 +26,9 @@ def get_sentence(sentence_file):
     if not line:
         return None
     while '%' in line:
-        print("Skipping comment: " + line)
+        print(line, end='')     #show comment in output
         line = sentence_file.readline()
-    print(line, end='')
+    print(line, end='')         #show sentence in outpu
     line = line.lower()
     if '.' in line:
         i = line.index('.')
@@ -35,7 +36,7 @@ def get_sentence(sentence_file):
     if '?' in line:
         i = line.index('?')
         line = line[:i] + ' ' + line[i:]
-    return line.split()
+    return line.split()         #tokenize sentence (morphology will improve this way of analyzing words)
 
 def process_Sentence(sentence, nextWord, StateReg, Trace):
     "Look up words in lexicon, maatch and change state register until reaching Final state"
@@ -48,7 +49,8 @@ def process_Sentence(sentence, nextWord, StateReg, Trace):
             break
     if not lexentry:
         print(word + " is not in lexicon")
-        return
+        Trace += word
+        return Trace
 
     i = 0
     matchedAlready = []
@@ -59,34 +61,63 @@ def process_Sentence(sentence, nextWord, StateReg, Trace):
             continue
         (prodName,condVector,changeVector,actions) = productions[prodIndex]
         i += 1
-#        print(lexentry + " " + prodName)
         if StateReg.match3(condVector):
+#            print(lexentry + " matched " + prodName)
             Trace += prodName + ":"
-            StateReg.change3(changeVector)
-            if actions and actions[0] == "lex": #For now, only action is lex
-                Trace += lexentry + " "
-                nextWord += 1   #advance to next word
-                if nextWord == len(sentence):
-                    if StateReg.match3(initStateVec):
-                        print("parse succeeds")
-                    else:
-                        print("parse fails to match final state")
-                    return Trace
-                return process_Sentence(sentence, nextWord, StateReg, Trace)
-            matchedAlready.append(prodIndex)
-            i = 0   #Recycle through categories until action lex
+
+            if actions: 
+                for action in actions:
+                    if action == "storeRel":                # Store SynState in a relative clause register
+                        if RelRegister0.isClear():
+                            RelRegister0.change3(StateReg)
+                        else:
+                            RelRegister1.change3(StateReg)
+                        Trace += action + ":"
+                    elif action == "restoreRel":            # Restore from a relative clause register
+                        StateReg.clear()                    # Prepare to restore SynState
+                        if RelRegister1.isClear():          # Nothng in RelRegister1, so restore from RelRegister0
+                            StateReg.change3(RelRegister0)  # Restore from RelGister0
+                            RelRegister0.clear()        
+                        else:
+                            StateReg.change3(RelRegister1)  #Restore from ReRegister1
+                            RelRegister1.clear()
+                        Trace += action + ":"
+
+                    elif action == "lex": #For now, only action is lex
+                        Trace += lexentry + " "
+                        nextWord += 1   #advance to next word
+                        if nextWord == len(sentence):
+                            if StateReg.match3(productions[initFinal][1]):   #Cond vector of InitFinalo produciton matches?
+                                print("parse succeeds")
+                            else:
+                                print("parse fails to match final state")
+                            return Trace
+
+            StateReg.change3(changeVector)                                  #Upodate current State register
+            return process_Sentence(sentence, nextWord, StateReg, Trace)    #process next word (tail recursion)
+        matchedAlready.append(prodIndex)
+        i = 0   #Recycle through categories until action lex
+
     print("parse fails to reach final state")
     return Trace
 
 def rvg():
-    print("Wlecome to RVG")
-    while (True):
-        sentence  = get_sentence(sentence_file)
-        if sentence == None:
-            return
+    print("Wlecome to RVG. Version 0.2 demonstates GAP constraints in WH-questions and embedding relative clauses.")
+    #Open sentence file, for version 02., either wh or rel (sentin.wh or sentin.rel)
+    sentence_file_name = "sentin." + input("Enter a sentin file (either wh or rel):")
+    sentence_file = open(sentence_file_name, "r")
+
+    while (True):                               #Loop for each sentence in sentence_file
+        sentence = get_sentence(sentence_file)  #Tokenize a sentence
+        if sentence == None:                    #No more sentences?
+            break
         print(sentence)
-        Trace = process_Sentence(sentence, 0, initStateVec, "")
-        print(Trace+'\n')
+        SynStateVec.change3(initStateVec)       #Initialize and reset registers (especially after a failed parse)
+        RelRegister0.clear()
+        RelRegister1.clear()
+
+        Trace = process_Sentence(sentence, 0, SynStateVec, "")  #Process a sentence and return a syntactic Trace 
+        print(Trace+'\n')                       #Trace is a strong of productions and actions taken to parse sentence
 
 if __name__ == '__main__':
     rvg()

@@ -40,9 +40,7 @@ data = ""
 
 #Provide some data to tokenize and parse
 def get_data(data):
-#   file_name = input('Enter .syn file name:')
-    file_name = "wh.lex"
-#   file_name += ".lex"
+    file_name = input('Enter .lexl file name:') + ".lex"
     with open(file_name) as file_handle:
         for line in file_handle:
             data = data + line

@@ -1,0 +1,19 @@
+% Relative clasuses defined in rel.syn & rel.lex, suing storeReg & restoreReg actions
+% Embeds relative clause with Subj gap:
+The man who owns a robot loves Martha. 
+% Embeds relative clause with Obj gap:
+The robot that the man owns broke. 
+% Center-mbedding relative clause can go two deep with two registers:
+The robot that the man who loves Martha owns broke. 
+% The sentence is  difficult for humans, yet still parses with two registers:
+The robot that the man who the woman saw owns broke.
+% Right-embedding can iterate in the same register:
+Martha owns a stick that beat the dog that beat the cat that ate the kid.
+% Right-embedding can also iterate within a relative clause register:
+The man who saw the stick that beat the dog that beat the cat that ate the kid owns a robot.
+% Tricky but possible embedding with relative clause gap and wh gap in the main clause:
+Who does the man who the robot saw love? 
+% Should fail due to lack of a gap in the mian clause:
+Who does the man who the robot saw love Martha?
+% Should fail due to lack of a gap in the relative clause:
+Who does the man who the robot saw Martha love?

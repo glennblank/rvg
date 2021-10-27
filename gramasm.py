@@ -3,14 +3,20 @@
 # A grammar consists of a collection of productions, each of which has a cond: TernVec, a Cchange: TernVec,
 # aand an optional list of actions:, notatbly lex for advancing to the next word, etc.
 
+#Importing an available library, ply.lex, to tokenize the grammar file
+import ply.lex as lex
+
 reserved = {
    'ordering_features' : 'ORDERINGFEATURES',
+   'defaultcond'    : 'DEFAULTCOND',
    'productions'    : 'PRODUCTIONS',
    'p'              : 'P',
    'cond'           : 'COND', 
    'change'         : 'CHANGE', 
    'action'         : 'ACTION',
    'lex'            : 'LEX',
+   'storeRel'       : 'storeRel',
+   'restoreRel'     : 'restoreRel',
    'init_final'     : 'INITFINAL'
 }
 
@@ -39,7 +45,6 @@ def t_error(t):
         t.lexer.skip(1)
 
 # Build the lexer
-import ply.lex as lex
 lexer = lex.lex()
 # Prepare to process tokens from data file
 tok = None
@@ -47,9 +52,7 @@ data = ""
 
 #Provide some data to tokenize and parse
 def get_data(data):
-#   file_name = input('Enter .syn file name:')
-    file_name = "wh.syn"
-#   file_name += ".syn"
+    file_name = input('Enter .syn file name:') + ".syn"
     with open(file_name) as file_handle:
         for line in file_handle:
             data = data + line
@@ -97,7 +100,7 @@ def actions_list(actions):
         tok = lexer.token()
         if not tok:
             error_exit("initfinal","EOF")
-        if tok.type == 'LEX':
+        if tok.type in ('LEX','storeRel', 'restoreRel'):
             actions.append(tok.value)
         else:
             break
@@ -105,22 +108,23 @@ def actions_list(actions):
 
 from Vectors import TernVec
 
-def parse_vector():
+def parse_vector(defaultVec):
     tVec = TernVec()
+    tVec.change3(defaultVec)
     global tok
     dotRange = False
     while True:
         tok = lexer.token()
         if not tok:
             error_exit("initfinal","EOF")
-        if tok.value in ('+','-'):
+        if tok.value in ('+','-','?'):
             sign = tok.value
         elif tok.value == '.':
             tok = lexer.token()
             section_header('.',True)
             dotRange = True
         else:
-            tVec.showVec(featureLabels,True)
+            # tVec.showVec(featureLabels,True)
             return tVec
         tok = lexer.token()
         if tok.value in featureLabels:
@@ -135,7 +139,15 @@ def parse_vector():
         else:
             error_exit("ordering feature",tok.value)
     return tVec
-           
+ 
+defaultCond = TernVec()
+defaultChange = TernVec()
+          
+def defaultCondVector():
+    if not section_header("defaultcond",False):
+        return
+    global defaultCond
+    defaultCond.change3(parse_vector(defaultCond))
 
 def productions_section():
     if not section_header('productions'):
@@ -153,10 +165,10 @@ def productions_section():
            error_exit("production name",tok.value)
         tok = lexer.token()
         section_header('cond', True)
-        condVector = parse_vector()
+        condVector = parse_vector(defaultCond)
 
         section_header('change',True)
-        changeVector = parse_vector()
+        changeVector = parse_vector(defaultChange)
         if section_header('action'):
             actions = actions_list([])
         else:
@@ -185,6 +197,7 @@ def gramasm():
     global data
     data = get_data(data)
     features_section()
+    defaultCondVector()
     productions_section()
     initfinal = initfinal_section()
     grammar = (featureLabels,productions,initfinal)
