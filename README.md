@@ -59,16 +59,20 @@ python3 rvg.py
 ```
 RVG will prompt for the name of a sentence file, for version 0.2, enter either wh or rel (for sentin.wh of version 0.1 or sentin.rel of version 0.2).
 
-To reassemble the grammar (see note about PLY above):
+To reassemble the grammar `rel.syn` (see note about PLY above):
 
 ```bash
-python3.9 gramasm.py
+python3 gramasm.py
 ```
 
 gramasm will then prompt for a .syn file; wh and rel are available (rel.syn incorporates grammar of why.syn)
 
-To reassemble the lexicon why.lex (see note about PLY above):
-python3.9 lexasm.py
+To reassemble the lexicon `rel.lex` (see note about PLY above):
+
+```bash 
+python3 lexasm.py
+```
+
 lexasm will then prompt for a .lex file; wh and rel are available (rel.lex incorporates lexicon capability of rel.lex)
 
 Glenn D. Blank, 10/12/2021 (0.1), 10/27/2021 (0.2)
