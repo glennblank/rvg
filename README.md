@@ -44,9 +44,18 @@ The robot that the man who loves Martha owns broke.
 That's about as much center-embedding of relative clauses as we're likely to generate or understand easily (i.e, in linear time
 
 ### Dependencies
-rvg.py reads gramasm.pkl and lexicon.pkl, which gramasm.py and lexasm.py assemble from source code in wh.syn and wh.lex, respectively. Grammars and lexicons can be edited in a text editor and reassembled, though for version 0.1, wh.syn and wh.lex are hard-wired into gramasm.py and lexasm.py, respectively.
 
-gramasm.py and lexasm.py use PLY, a Python implmeentation of YACC as a tokenizer of RVG grammars and lexicons. See https://github.com/dabeaz/ply
+`rvg.py` reads `gramasm.pkl` and `lexicon.pkl`, which `gramasm.py` and `lexasm.py` assemble from source code in `wh.syn` and `wh.lex`, respectively. Grammars and lexicons can be edited in a text editor and reassembled, though for version 0.1, wh.syn and wh.lex are hard-wired into gramasm.py and lexasm.py, respectively.
+
+gramasm.py and lexasm.py use `PLY`, a Python implmeentation of YACC as a tokenizer of RVG grammars and lexicons. See https://github.com/dabeaz/ply
+
+#### Install Requirements
+
+To install all required dependencies for this project, execute:
+
+```bash
+pip install -r requirements.txt
+```
 
 ### Running
 
