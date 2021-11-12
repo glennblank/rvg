@@ -1,3 +1,4 @@
+#!/usr/bin/env python3.9
 # rvgProcessor reads sentences and processes them in linear time
 import Vectors  # TernVec 
 
