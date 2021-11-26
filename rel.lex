@@ -20,9 +20,10 @@ e owns    cat VERB SUBJ NGAP NPEND RELCEND OBJ
 e ate     cat VERB SUBJ NGAP NPEND RELCEND OBJ
 e bit     cat VERB SUBJ NGAP NPEND RELCEND OBJ
 e beat    cat VERB SUBJ NGAP NPEND RELCEND OBJ
+e believe cat VERB SUBJ NGAP NPEND RELCEND OBJ
 e who     cat WH RELC RELR
 e what    cat WH
-e that    cat RELC RELR
+e that    cat RELC RELR COMPTHAT
 e does    cat QUES
 e .       cat CLOSE OBJ NPEND RELCEND NGAP
 e ?       cat CLOSE OBJ NPEND RELCEND NGAP

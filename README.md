@@ -35,13 +35,17 @@ This respository is implemented in Python 3.9.x. (Earlier implementations were i
 Version 0.1 demonstates how RVG processes WH-questions: following the words who or what, there must be a noun phrase gap in the sentence.
 python rvg parses sentences from sentin.txt, production syntactic traces like the one shown above.
 python gramasm.py assembles a grammar, a collection of production rules with ternary vector conditions and changes. In versjon 0.1, the grammar is in wh.syn.
-python lexasm.py assembles a lexicon of words with syntactic categories corresponding to productions in the grammar. In vesion 01, the lexicon is wh.lex
+python lexasm.py assembles a lexicon of words with syntactic categories corresponding to productions in the grammar. In version 0.1, the lexicon is wh.lex.
 
 Version 0.2 demonstrates how RVG processes embedding similarly to the human sentence proecssor. Right-embedding can iterate indefinietly in the same space, i.e., 
 Martha owns a stick that beat the dog that beat the cat that ate the kid.
-Center-embedding is sharply limited in human sentence processing and can thus requires only storing state in one or two registrs, rather than an unbounded stack:
+Center-embedding is sharply limited in human sentence processing and can thus requires only storing state in one register, rather than an unbounded stack:
 The robot that the man who loves Martha owns broke. 
-That's about as much center-embedding of relative clauses as we're likely to generate or understand easily (i.e, in linear time
+That's about as much center-embedding of relative clauses as we're likely to generate or understand easily (i.e, in linear time).
+
+Version 0.3 also demonstrates how gap constraint from Wh-questions can pass through any number of Complement clauses:
+Who does the woman believe that George saw that Martha loves?
+RVG handles long-distance discontinuities that gives transformational or phrase structure grammars fits! 
 
 ### Dependencies
 
@@ -68,6 +72,11 @@ python3 rvg.py
 ```
 RVG will prompt for the name of a sentence file, for version 0.2, enter either wh or rel (for sentin.wh of version 0.1 or sentin.rel of version 0.2).
 
+In version 0.3, RVG accepts an argument to STEP through each production and action, while showing state vectors and cond vectors:
+
+```bash
+python3 rvg.py STEP
+```
 To reassemble the grammar `rel.syn` (see note about PLY above):
 
 ```bash
@@ -84,4 +93,4 @@ python3 lexasm.py
 
 lexasm will then prompt for a .lex file; wh and rel are available (rel.lex incorporates lexicon capability of rel.lex)
 
-Glenn D. Blank, 10/12/2021 (0.1), 10/27/2021 (0.2)
+Glenn D. Blank, 10/12/2021 (0.1), 10/27/2021 (0.2), 11/25/2021 (0.3)

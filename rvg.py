@@ -14,9 +14,8 @@ initStateVec = Vectors.TernVec()    #Inital state vector for each sentence
 initStateVec.change3(productions[initFinal][2]) #init state is changeVec of initFinal production
 SynStateVec.change3(initStateVec)   #Initialize current state register with initFinal produciton
 
-# sentStore Syntatcc State vector in registers when center-embedding relative clauses
-RelRegister0 = Vectors.TernVec()
-RelRegister1 = Vectors.TernVec()
+#One register suffices to process center-embedding of relative clauses
+RelClauseReg = Vectors.TernVec()
 
 f = open('lexicon.pkl', 'rb')   #Open the last assembled lexicon
 lexicon = pickle.load(f)    # list of lexical entires to be constructed
@@ -80,19 +79,11 @@ def process_Sentence(sentence, nextWord, StateReg, Trace):
             if actions: 
                 for action in actions:
                     if action == "storeRel":                # Store SynState in a relative clause register
-                        if RelRegister0.isClear():
-                            RelRegister0.change3(StateReg)
-                        else:
-                            RelRegister1.change3(StateReg)
+                        RelClauseReg.change3(StateReg)
                         Trace += action + ":"
                     elif action == "restoreRel":            # Restore from a relative clause register
                         StateReg.clear()                    # Prepare to restore SynState
-                        if RelRegister1.isClear():          # Nothng in RelRegister1, so restore from RelRegister0
-                            StateReg.change3(RelRegister0)  # Restore from RelGister0
-                            RelRegister0.clear()        
-                        else:
-                            StateReg.change3(RelRegister1)  #Restore from ReRegister1
-                            RelRegister1.clear()
+                        StateReg.change3(RelClauseReg)      # Restore from RelClauseReg
                         Trace += action + ":"
 
                     elif action == "lex": #For now, only action is lex
@@ -114,11 +105,7 @@ def process_Sentence(sentence, nextWord, StateReg, Trace):
     return Trace
 
 def rvg():
-    print("Welcome to RVG.")
-    print("Version 0.1 demonstated GAP constraints in WH-questions")
-    print("Version 0.2 demonstates limted center-embedding and unlimited embedding of relative clauses")
-    print("Version 0.3 accepts optional argument step to show more details about matching productions")
-    
+    print("Welcome to RVG.")    
     
     #Open sentence file, for version 02., either wh or rel (sentin.wh or sentin.rel)
     sentence_file_name = "sentin." + input("Enter a sentin file (either wh or rel):")
@@ -131,8 +118,7 @@ def rvg():
             break
         print(sentence)
         SynStateVec.change3(initStateVec)       #Initialize and reset registers (especially after a failed parse)
-        RelRegister0.clear()
-        RelRegister1.clear()
+        RelClauseReg.clear()
         if STEP == "next":
             STEP = "step"
 

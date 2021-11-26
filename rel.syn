@@ -21,10 +21,14 @@ p QUES   cond +S +AUX          change -AUX -REL	action lex
 p RELC   cond +NTERM +V        change +S..GAP -DET..NTERM +REL action storeRel lex 
 %RELC saves syntactic state in REL1 or REL2 register
 p RELR   cond +NTERM -V        change +S..GAP -DET..NTERM action lex
-%NPEND termiates noun phrases, RELEND terminates embedded relative clauses
+%NPEND terminates noun phrases, RELCEND terminates embedded relative clauses
 p NPEND  cond +NTERM           change -NTERM
-p RELCEND cond -S -V -GAP +REL change -NTERM   action restoreRel %Restore SynState from register 
+p RELCEND cond -S -V -GAP +REL change -NTERM  action restoreRel %Restore SynState from register 
 %RELCEND restores from REL1 or REL2 register
+
+%COMPTHAT right-embeds Complemenet Clause proposition starting with that 
+p COMPTHAT   cond -S -V  change +S..AUX -DET..NTERM action lex
+
 initfinal CLOSE
 
 %Examples in sentin.rel follow
@@ -35,3 +39,4 @@ initfinal CLOSE
 %Who does the man who the robot saw love? %tricky but possible embedding
 %The man loves the woman who owns a robot that saw a girl who loves George. %Right embedding is fine
 %Who does the man who loves the woman who owns a robot that saw a girl like? %Right embedding passes +GAP thought indefinitely, so NGAP is OK at the end of all the RELR clauses
+%Who does Martha believe that George hope that Pamela love?
