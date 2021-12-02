@@ -104,14 +104,15 @@ def process_Sentence(sentence, nextWord, StateReg, Trace):
     print("parse fails to reach final state")
     return Trace
 
-def rvg():
+def rvg(is_step=False):
     print("Welcome to RVG.")    
     
     #Open sentence file, for version 02., either wh or rel (sentin.wh or sentin.rel)
     sentence_file_name = "sentin." + input("Enter a sentin file (either wh or rel):")
     sentence_file = open(sentence_file_name, "r")
 
-    global STEP #Version 0.3 supports STEP mode for more details about matching prodductions
+    global STEP #Version 0.3 supports STEP mode for more details about matching productions
+    STEP = "step" if is_step else None;
     while (True):                               #Loop for each sentence in sentence_file
         sentence = get_sentence(sentence_file)  #Tokenize a sentence
         if sentence == None:                    #No more sentences?
@@ -126,6 +127,7 @@ def rvg():
         print(Trace+'\n')                       #Trace is a strong of productions and actions taken to parse sentence
 
 import sys
+
 def main():
     global STEP
     if len(sys.argv) > 1 and sys.argv[1] == "step":
