@@ -9,6 +9,7 @@ import ply.lex as lex
 reserved = {
    'ordering_features' : 'ORDERINGFEATURES',
    'defaultcond'    : 'DEFAULTCOND',
+   'boundaries'     : 'BOUNDARIES',
    'productions'    : 'PRODUCTIONS',
    'p'              : 'P',
    'cond'           : 'COND', 
@@ -17,6 +18,7 @@ reserved = {
    'lex'            : 'LEX',
    'storeRel'       : 'storeRel',
    'restoreRel'     : 'restoreRel',
+   'save'           : 'save',
    'init_final'     : 'INITFINAL'
 }
 
@@ -69,8 +71,9 @@ def error_exit(expected,found):
         msg = "Expected " + expected + " but found " + found 
     sys.exit(msg)
 
-featureLabels = [ ]    # list of feature labels
+featureLabels = [ ]     # list of feature labels
 productions = [ ]       # list of productions
+boundaries = [ ]        # list of boundary labels
 
 def section_header(section_name, require=False):
     global tok
@@ -102,6 +105,14 @@ def actions_list(actions):
             error_exit("initfinal","EOF")
         if tok.type in ('LEX','storeRel', 'restoreRel'):
             actions.append(tok.value)
+        elif tok.type == 'save':
+            tok = lexer.token()
+            for i in range(len(boundaries)):
+                if boundaries[i] == tok.value:
+                    actions.append("save" + str(i))
+                    break
+            if i > len(boundaries):
+                error_exit("boundary name",tok.value)
         else:
             break
     return actions
@@ -149,6 +160,16 @@ def defaultCondVector():
     global defaultCond
     defaultCond.change3(parse_vector(defaultCond))
 
+def boundaries_section():
+    if not section_header("boundaries",False):
+        return
+    global tok
+    tok = lexer.token()
+    while tok.value != "productions":
+        boundaries.append(tok.value)
+        tok = lexer.token()
+#    print(boundaries)
+
 def productions_section():
     if not section_header('productions'):
         return
@@ -156,7 +177,7 @@ def productions_section():
     tok = lexer.token()
     while True:
         if not tok:
-            error_exit("initfinal","EOF")
+            error_exit("init_final","EOF")
         section_header('p', True)  
         tok = lexer.token()
         if tok.type == 'NAME':
@@ -198,9 +219,10 @@ def gramasm():
     data = get_data(data)
     features_section()
     defaultCondVector()
+    boundaries_section()
     productions_section()
     initfinal = initfinal_section()
-    grammar = (featureLabels,productions,initfinal)
+    grammar = (featureLabels,boundaries,productions,initfinal)
     f = open('grammar.pkl', 'wb')
     pickle.dump(grammar,f)
     f.close

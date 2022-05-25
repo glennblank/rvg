@@ -45,11 +45,15 @@ That's about as much center-embedding of relative clauses as we're likely to gen
 
 Version 0.3 also demonstrates how gap constraint from Wh-questions can pass through any number of Complement clauses:
 Who does the woman believe that George saw that Martha loves?
-RVG handles long-distance discontinuities that gives transformational or phrase structure grammars fits! 
+RVG handles long-distance discontinuities that gives transformational or phrase structure grammars fit
+
+Version 0.4 (May 2022) adds boundary backtracking, so that RVG can handle ambiguity by backtracking to a finite set of registers associated with grammatical boundaries (such as Subject, Predicate, Object, start of Noun Phrase and NP post-modifiers, Prepositon).
+So long as the number of registers to which the processor can backtrack, overall processing time is linear, just as human sentence processing is. Morever, finite regisg
+er resources accounts for "garden-path" processing which are beyond the capacity of registers, which the processor reuses.
 
 ### Dependencies
 
-`rvg.py` reads `gramasm.pkl` and `lexicon.pkl`, which `gramasm.py` and `lexasm.py` assemble from source code in `wh.syn` and `wh.lex`, respectively. Grammars and lexicons can be edited in a text editor and reassembled, though for version 0.1, wh.syn and wh.lex are hard-wired into gramasm.py and lexasm.py, respectively.
+`rvgprocessor.py` reads `gramasm.pkl` and `lexicon.pkl`, which `gramasm.py` and `lexasm.py` assemble from source code in `wh.syn` and `wh.lex`, respectively. Grammars and lexicons can be edited in a text editor and reassembled, though for version 0.1, wh.syn and wh.lex are hard-wired into gramasm.py and lexasm.py, respectively.
 
 gramasm.py and lexasm.py use `PLY`, a Python implmeentation of YACC as a tokenizer of RVG grammars and lexicons. See https://github.com/dabeaz/ply
 
@@ -75,7 +79,13 @@ RVG will prompt for the name of a sentence file, for version 0.2, enter either w
 In version 0.3, RVG accepts an argument to STEP through each production and action, while showing state vectors and cond vectors:
 
 ```bash
-python3 rvg.py STEP
+python3 rvg.py -s
+```
+
+In version 0.4, RVG also accepts an argument to orshow behavior of backtracking, i.e., when the processor explicitly saves state and when it backtracks. 
+
+```bash
+python3 rvg.py -b
 ```
 To reassemble the grammar `rel.syn` (see note about PLY above):
 
@@ -83,7 +93,7 @@ To reassemble the grammar `rel.syn` (see note about PLY above):
 python3 gramasm.py
 ```
 
-gramasm will then prompt for a .syn file; wh and rel are available (rel.syn incorporates grammar of why.syn)
+gramasm will then prompt for a .syn file; wh and rel are available (rel.syn incorporates grammar of wh.syn and bregs.syn incorporate the grammatical capacity of wh.syn and rel.syn, so that it can parse sentin.wh, sentin.rel and sentin.bregs.
 
 To reassemble the lexicon `rel.lex` (see note about PLY above):
 
@@ -93,4 +103,4 @@ python3 lexasm.py
 
 lexasm will then prompt for a .lex file; wh and rel are available (rel.lex incorporates lexicon capability of rel.lex)
 
-Glenn D. Blank, 10/12/2021 (0.1), 10/27/2021 (0.2), 11/25/2021 (0.3)
+Glenn D. Blank, 10/12/2021 (0.1), 10/27/2021 (0.2), 11/25/2021 (0.3), 5/25/2022 (0.4)

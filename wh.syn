@@ -10,7 +10,6 @@ p DET   cond +DET             change -DET		action lex
 p NOUN  cond +HEAD            change -DET..HEAD		action lex
 p NAME  cond +DET..HEAD       change -DET..HEAD		action lex
 % Productions for Wh-questions
-p WH    cond +S -GAP -HEAD    change +GAP		action lex
 p QUES  cond +S +AUX -HEAD    change -AUX		action lex
 p NGAP cond +GAP +DET..HEAD   change -GAP -DET..HEAD
 initfinal CLOSE

@@ -1,22 +1,19 @@
-% Relative clasuses defined in rel.syn & rel.lex, suing storeReg & restoreReg actions
-% Embeds relative clause with Subj gap:
+% Center-embedded relative clauses use storeReg & restoreReg actions, shown in traces
+% Center-embed a relative clause with Subj gap:
 The man who owns a robot loves Martha. 
-% Embeds relative clause with Obj gap:
+% Center-embeds relative clause with Obj gap:
 The robot that the man owns broke. 
-% Center-embedding relative clause can go two deep, with one register:
-The robot that the man who loves Martha owns broke. 
-% The sentence is  difficult for humans, yet still parses with one registers:
-The robot that the man who the woman saw owns broke.
-% Right-embedding can iterate in the same register indefinitely:
-Martha owns a stick that beat the dog that beat the cat that ate the kid.
-% Right-embedding can also iterate within a relative clause register:
-The man who saw the stick that beat the dog that beat the cat that ate the kid owns a robot.
-% Tricky but possible embedding with relative clause gap and wh gap in  main clause:
+% Right-embedding can iterate using the same register indefinitely:
+Martha owns a stick that beat the dog that bit the cat that ate the kid.
+% Right-embedding can also iterate within a center-embedding relative clause:
+The man who saw the stick that beat the dog that bit the cat that ate the kid owns a robot.
+% Tricky but possible WH gap in  main clause and center-embedding relative clause gap:
 Who does the man who the robot saw love? 
-% Should fail due to lack of a gap in the mian clause:
+% Following sentence has too much center-embedding, beyond limited resources of sentence processor:
+The robot that the man who the woman saw owns broke.
+% Should fail due to lack of a gap in the main clause:
 Who does the man who the robot saw love Martha?
 % Should fail due to lack of a gap in the relative clause:
 Who does the man who the robot saw Martha love?
-% Gap constraint from Wh-questions can pass through any number of Complement clauses:
-% RVG handles long-distance discontinuities that gives transformational or phrase structure grammars fits!
-Who does the woman believe that George saw that Martha loves?
+% RVG handles long-distance discontinuities that gives phrase structure or transformational grammars fits! Following sentence shows that gap constraint from Wh-questions can pass through any number of Complement clauses, efficiently:
+Who does the woman believe that George think that Martha loves?

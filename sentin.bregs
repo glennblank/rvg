@@ -1,0 +1,12 @@
+% To see how boundary backtracking works, try step mode, i.e.: running python3 rvg.py -s
+%
+% Famous "garden-path" sentence demonstrates finite constraints of sentence processor:
+The horse raced past the barn fell.
+% Following sentences are similar to the garden-path but can backtrack to a reduced relative clause:
+The horse taken past the barn fell.
+The horse found by the barn fell.
+% No garden-path effect with questions, because they backtrack to an available register:
+Is the block sitting on the table?
+Is the block sitting on the table red?
+% Lexical ambiguity ('fly' can be a verb or a noun) also backtracks:
+Did the fly fly past the barn?

@@ -1,5 +1,11 @@
 % Sentences for wh.syn and wh.lex
+% First, a simple SVO (Subject Verb Object) sentence:
 Pam loves quiche.
+% Next, Who as the Subject:
 Who loves quiche?
+% Next, Who as the Object of the verb: NGAP constraint passes through the state register
 Who does George love?
+% NGAP constraint requires a gap NP appear somewhere in the same clause, so the following fails:
 Who does George love Martha?
+% Note that yes/no questions don't trigger an NGAP:
+Does George love Martha?

@@ -1,0 +1,45 @@
+ordering_features  S T TR V O P THAT PASS GAP NP DET HEAD ROLE RELEND
+%S=Subj T=TensedVerb TR=TRans/Intrans/Passive V=Verb O=Obj P=Prep
+defaultcond -DET..HEAD %all other features default to ?
+boundaries Subj Pred NP NPmod Prep
+productions
+p SUBJ    cond +S -T +ROLE      change -S -ROLE     action save Subj
+%TENS_SUBJ recognizes the first tensed verb--and also closes a subject noun phrase
+p TENS_SUBJ cond +S +T +ROLE    change -T -S -ROLE  action save NPmod
+%QUES permits an inverted auxiliary verb
+p QUES    cond +S +T -ROLE	    change -T           action lex
+%INTRANS/TRANS/PASSIVE are alternative subcategories of verbs
+p INTRANS cond -S -T +TR +V	change -TR -O	        %action save Pred
+p TRANS   cond -S -T +TR +V  	change -TR +NP +O      action save Pred
+p PASSIVE cond -S +T +TR -NP	change -T -TR +V -O +PASS action save Pred
+p PROG    cond -S +T +TR -NP	change -T +V
+p THAT_   cond -S -T +V         change -TR +THAT 
+%V, PREDADJ and PP are main predicates
+p V       cond -S -TR +V        change -V	        action lex
+p PREDADJ cond -S -T +TR +V     change -TR -V -O    action lex
+p PP	  cond -S -T +V         change -TR -V -O +DET..HEAD -NP -P action lex
+p OBJ     cond -V +O +ROLE      change -O -ROLE    
+%CTHAT opens a right-embedded 'that' complement clause
+p CTHAT   cond -V +O +THAT      change +S..P -THAT..ROLE +NP ?GAP action lex
+%PPR is a preposition that modifies a verb
+p PPR	  cond -V -O	  	    change -P +DET..HEAD +NP action lex save Prep
+p PPEND   cond -V -P +ROLE      change -ROLE +P -NP  action save NPmod
+p PASSBY  cond -V -O +PASS      change -P +DET..HEAD +NP -PASS action lex save Prep
+p NP      cond +NP 	            change +DET..HEAD -NP action save NP
+p DET     cond +DET..HEAD       change -DET          action lex
+p NOUN    cond ?DET +HEAD       change -DET..HEAD +ROLE action lex
+p NAME    cond +DET..HEAD       change -DET..HEAD +ROLE action lex
+%WH-questions illustrate how ternary vactor -NGAP constraint until a missing NP 
+p WH      cond +S -GAP -HEAD -ROLE    change +GAP		    action lex
+p QUES    cond +S +T   -HEAD    change -T		    action lex
+%Open a relative clause--either right or center-embedded
+p RELR    cond -HEAD +ROLE -S..V -GAP change +S..P +GAP +NP -DET..ROLE action lex
+p RELC    cond -HEAD +ROLE +V +O      change +S..P +GAP +NP -DET..ROLE +RELEND
+           action storeRel lex %center-embed--next clause level 
+%Reduced relative clause--no relative pronoun, subj or tensed verb
+p REDRELC cond +ROLE +O -RELEND change -S +T..P -V -DET..ROLE +RELEND
+	  action save NPmod storeRel 
+p RELEND  cond +RELEND -S..O -ROLE -GAP change -RELEND action restoreRel
+p NGAP    cond +GAP +NP ?DET..HEAD change -NP..HEAD +ROLE -GAP
+p CLOSE   cond -S..O -GAP -ROLE -RELEND change +S..P -THAT..RELEND +NP action lex
+initfinal CLOSE

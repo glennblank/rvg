@@ -4,10 +4,11 @@
 
 reserved = {
    'entries' : 'ENTRIES',
-   'e'       : 'ENTRY'
+   'e'       : 'ENTRY',
+   'macros_cat' : 'MACROS_CAT'
 }
 
-literals = "+-?."
+literals = "+-?.#"
 
 def t_NAME(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
@@ -62,7 +63,7 @@ import pickle
 #A grammar consosts of various sections, some required, others optional
 f = open('grammar.pkl', 'rb')
 grammar = pickle.load(f)
-featureLabels, productions, initfinal = grammar[0], grammar[1], grammar[2]
+productions = grammar[2]
 
 lexicon = [ ]    # list of lexical entires to be constructed
 
@@ -81,12 +82,40 @@ def features_section():
     section_header('ordering_features', True)
     while True:
         tok = lexer.token()
-        if not tok:
-            error_exit("productions then initfinal","EOF")
-        if tok.type == 'NAME':
-            featureLabels.append(tok.value)
-        else:
-            break
+        if not tok: error_exit("productions then initfinal","EOF")
+        if tok.type == 'NAME': featureLabels.append(tok.value)
+        else: break
+
+macroCats_dict = { }
+
+def macros_cat():
+    global tok
+    macroName = None
+    macroCategories = [ ]
+    while True:
+        tok = lexer.token()
+        if not tok: return
+        if (tok.value == '#' or tok.type == 'ENTRIES') and macroName: 
+            macroCats_dict[macroName] = macroCategories
+            #print("Macro: " + macroName)
+            #print(macroCats_dict[macroName])
+            if tok.type == 'ENTRIES': return  #last macro defined
+            macroName = tok.value  #Set up a new macro
+            macroCategories = []   #Set up a new macro categories list  
+        if tok.value == '#':
+            tok = lexer.token()
+            macroName = tok.value
+            continue
+        if tok.type == 'NAME':  #Add category to categories list
+            i = 0   # Look for index of production matching category name
+            found = False
+            for p in productions:
+                if tok.value == p[0]:       #first item in production is its name
+                    macroCategories.append(i)    #add its index to list
+                    found = True
+                    break
+                else: i+=1
+            if not found: error_exit("category name",tok.value)
 
 def get_categories(categories):
     global tok
@@ -97,58 +126,72 @@ def get_categories(categories):
         if not tok or tok.type == 'ENTRY':
             break
         
+        if tok.value == "#":    #Found a macro
+            tok = lexer.token()
+            macroCategories = macroCats_dict[tok.value]
+            categories.extend(macroCategories)
+            continue
+
         i = 0   # Look for index of production matching category name
         found = False
         for p in productions:
-            if tok.value == p[0]:
-                categories.append(i)
+            if tok.value == p[0]:       #first item in production is its name
+                categories.append(i)    #add its index to list
                 found = True
                 break
-            else:
-                i+=1
-        if not found:
-            error_exit("production name",tok.value)
+            else: i+=1
+        if not found: error_exit("production name",tok.value)
     return categories
 
 from Vectors import TernVec
-           
+lexDict = dict()  #Lookup can find a single lexEntry or a list of lexEntry
+
 def entries_section():
     global tok
     tok = lexer.token()
+    if section_header("macros_cat",False):
+        macros_cat()
+        #print(macroCats_dict)
     section_header('entries',True)
     tok = lexer.token()
+    index = 0               #index of lexEntry in lexicon
+
     while True:
         if not tok:
             break
         section_header('e', True)  
         tok = lexer.token()
         if tok.type == 'NAME':
-            lexeme = tok.value.lower()
+            spelling = tok.value.lower()
         elif tok.value in literals:
-            lexeme = tok.value
+            spelling = tok.value
         else:
-           error_exit("lexeme",tok.value)
+           error_exit("spelling",tok.value)
         #tok = lexer.token()
         #section_header('cond', True)
         #condVector = parse_vector()
 
         categories = get_categories([])
 
-        lexEntry = (lexeme,categories)
-        print(lexEntry)
+        lexEntry = (spelling,categories)
+        #print(lexEntry)
         lexicon.append(lexEntry)
+        
+        #add spelling to lexDict for lookup with index to lexicon
+        if spelling not in lexDict: lexDict[spelling] = [index]
+        else: lexDict[spelling].append(index)
+        index = index + 1
 
 def lexasm():
     global data
     data = get_data(data)
     entries_section()
+    print(lexDict)
+    
     f = open('lexicon.pkl', 'wb')
     pickle.dump(lexicon,f)
+    pickle.dump(lexDict,f)
     f.close
-#    f = open('grammar.pkl', 'rb')
-#    grammar=pickle.load(f)
-#    print("after pickle dump & load")
-#    print(grammar)
 
 if __name__ == '__main__':
      lexasm()
