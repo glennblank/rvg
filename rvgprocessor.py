@@ -143,13 +143,12 @@ def rvg(step):
         extension = input("Enter a sentin file extension (wh, rel or bregs):")
         if extension in ("wh","rel","bregs"): break
         else: print("Sentin files available are wh, rel or bregs")
-       
     sentence_file_name = "sentin." + extension
     sentence_file = open(sentence_file_name, "r")
 
     global STEP #Version 0.3 supports STEP mode for more details about matching productions
     STEP = step
-    while (True):                               #Loop for each sentence in sentence_file
+    while True:                               #Loop for each sentence in sentence_file
         sentence = get_sentence(sentence_file)  #Tokenize a sentence
         if sentence == None:                    #No more sentences?
             break

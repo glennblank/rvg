@@ -131,7 +131,6 @@ class BoundaryRegs:
         self.prodListIndex[boundaryIndex] = stateReg.prodListIndex
         self.trace[boundaryIndex] = str(stateReg.trace)
         self.resumes.append(boundaryIndex)
-   
 
     def resume(self, stateReg):
         "resume state from register at lastResume to toStateVec and update lastResume"

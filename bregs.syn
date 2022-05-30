@@ -3,14 +3,14 @@ ordering_features  S T TR V O P THAT PASS GAP NP DET HEAD ROLE RELEND
 defaultcond -DET..HEAD %all other features default to ?
 boundaries Subj Pred NP NPmod Prep
 productions
-p SUBJ    cond +S -T +ROLE      change -S -ROLE     action save Subj
+p SUBJ      cond +S -T +ROLE    change -S -ROLE     action save Subj
 %TENS_SUBJ recognizes the first tensed verb--and also closes a subject noun phrase
 p TENS_SUBJ cond +S +T +ROLE    change -T -S -ROLE  action save NPmod
 %QUES permits an inverted auxiliary verb
 p QUES    cond +S +T -ROLE	    change -T           action lex
 %INTRANS/TRANS/PASSIVE are alternative subcategories of verbs
 p INTRANS cond -S -T +TR +V	change -TR -O	        %action save Pred
-p TRANS   cond -S -T +TR +V  	change -TR +NP +O      action save Pred
+p TRANS   cond -S -T +TR +V  	change -TR +NP +O   action save Pred
 p PASSIVE cond -S +T +TR -NP	change -T -TR +V -O +PASS action save Pred
 p PROG    cond -S +T +TR -NP	change -T +V
 p THAT_   cond -S -T +V         change -TR +THAT 

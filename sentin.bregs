@@ -1,5 +1,5 @@
 % To see how boundary backtracking works, try step mode, i.e.: running python3 rvg.py -s
-%
+% 
 % Famous "garden-path" sentence demonstrates finite constraints of sentence processor:
 The horse raced past the barn fell.
 % Following sentences are similar to the garden-path but can backtrack to a reduced relative clause:

@@ -1,4 +1,4 @@
-% Center-embedded relative clauses use storeReg & restoreReg actions, shown in traces
+% Center-embedded relative clauses use storeReg & restoreReg actions, shown in traces 
 % Center-embed a relative clause with Subj gap:
 The man who owns a robot loves Martha. 
 % Center-embeds relative clause with Obj gap:

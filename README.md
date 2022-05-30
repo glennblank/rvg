@@ -5,9 +5,7 @@ Register Vector Grammar (RVG) is an architecture for natural language processing
 Glenn Blank published papers describing RVG in Communications of the ACM, Vol. 32, No. 10. "A finite and real-time processor for natural language,
 "Semantic interpretation in linear time in the ATIS domain" in Applied Intelligence, 1995 / 10 Vol. 5; Iss. 4, https://ur.booksc.eu/book/6318458/bcd8fa, etc.
 
-At its core, RVG is a finite state machine in which states are Vectors of ternary valued features (+, -, or ?).
-The third value (?) can match either + or - values and will not change either + or 1. 
-Thus ternary value vectors can propagate constraints through a state Register Vector.
+At its core, RVG is a finite state machine in which states are Vectors of ternary valued features (+, -, or ?). The third value (?) can match either + or - values and will not change either + or 1. Thus ternary value vectors can propagate constraints through a state Register Vector.
 
 Version 0.1 illustrate with a simple example, involving WH-questions.
 

@@ -7,7 +7,6 @@ import rvgprocessor
 @click.option('--step', '-s', is_flag=True, default=False, help='Show more details about matching productions')
 @click.option('--back', '-b', is_flag=True, default=False, help='Show boundary backtracking')
 def cli(step,back):
-    #print("Step is true!" if step else "Step is false!")
     if step: mode = 1
     elif back: mode = 2
     else: mode = None

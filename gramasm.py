@@ -2,6 +2,7 @@
 #********** gramasm assembles RVG grammars for readable source code into vectors and other structures ****
 # A grammar consists of a collection of productions, each of which has a cond: TernVec, a Cchange: TernVec,
 # aand an optional list of actions:, notatbly lex for advancing to the next word, etc.
+# Version 0.4 adds boundaries and savd action to support boundary backbacklomg
 
 #Importing an available library, ply.lex, to tokenize the grammar file
 import ply.lex as lex

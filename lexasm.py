@@ -1,6 +1,6 @@
 
 #********** lexasm assembles RVG lexicons for readable source code into vectors and other structures ****
-# A lexicon consists of a collection of lexical entries
+# A lexicon consists of a collection of lexical entries 
 
 reserved = {
    'entries' : 'ENTRIES',
